@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2B Communication | Full Admin Control</title>
+    <title>2B Communication | Final System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <link href="https://fonts.cdnfonts.com/css2?family=SolaimanLipi&display=swap" rel="stylesheet">
@@ -39,23 +39,28 @@
         <div class="bg-slate-900 text-white p-6 rounded-3xl shadow-2xl border-b-8 border-indigo-600">
             <div class="mb-6">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-indigo-400 font-bold flex items-center gap-2">📊 লাইভ কাজের রিপোর্ট</h3>
-                    <div class="bg-indigo-600 px-4 py-1 rounded-full text-sm font-bold shadow-lg">সর্বমোট ডাটা: <span id="total-data-count">0</span> টি</div>
+                    <h3 class="text-indigo-400 font-bold">📊 লাইভ কাজের রিপোর্ট</h3>
+                    <div class="bg-indigo-600 px-4 py-1 rounded-full text-sm font-bold">মোট: <span id="total-data-count">0</span></div>
                 </div>
                 <div id="user-stats-grid" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
+            </div>
+
+            <div class="bg-slate-800 p-4 rounded-2xl mb-6 border border-slate-700">
+                <p class="text-xs font-bold text-indigo-300 mb-2 uppercase">প্লেট টেমপ্লেট আপলোড করুন:</p>
+                <input type="file" id="plate-file-input" accept="image/*" onchange="handlePlateUpload()" class="text-xs text-slate-400 file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500">
             </div>
 
             <hr class="border-slate-700 my-6">
 
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-indigo-400 font-bold">👤 ইউজার ম্যানেজমেন্ট (ব্লক/আনব্লক)</h3>
-                <button onclick="clearAllData()" class="bg-red-500 hover:bg-red-600 text-white text-[10px] px-3 py-1 rounded-lg font-bold">সব ডাটা মুছুন</button>
+                <h3 class="text-indigo-400 font-bold">👤 ইউজার ম্যানেজমেন্ট</h3>
+                <button onclick="clearAllData()" class="bg-red-500 text-[10px] px-3 py-1 rounded-lg font-bold">সব ডাটা মুছুন</button>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
-                <input type="text" id="new-username" placeholder="ইউজার আইডি" class="p-2 rounded bg-slate-800 border border-slate-700 text-sm">
+                <input type="text" id="new-username" placeholder="আইডি" class="p-2 rounded bg-slate-800 border border-slate-700 text-sm">
                 <input type="text" id="new-password" placeholder="পাসওয়ার্ড" class="p-2 rounded bg-slate-800 border border-slate-700 text-sm">
-                <button onclick="addUser()" class="bg-indigo-600 hover:bg-indigo-500 py-2 rounded font-bold text-sm">ইউজার তৈরি</button>
+                <button onclick="addUser()" class="bg-indigo-600 py-2 rounded text-sm font-bold">তৈরি করুন</button>
             </div>
             <div id="user-list-admin" class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-2"></div>
         </div>
@@ -64,18 +69,18 @@
     <div class="bg-slate-50 p-6 rounded-2xl mb-8 border">
         <input type="hidden" id="edit-index" value="-1">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input type="text" id="owner" placeholder="মালিকের নাম" class="p-3 border rounded-xl outline-none focus:ring-2 ring-indigo-200">
-            <input type="text" id="parent" placeholder="পিতা/স্বামী" class="p-3 border rounded-xl outline-none focus:ring-2 ring-indigo-200">
-            <input type="text" id="hld" placeholder="হোল্ডিং নং" class="p-3 border rounded-xl outline-none focus:ring-2 ring-indigo-200">
-            <input type="text" id="ward" placeholder="ওয়ার্ড নং" class="p-3 border rounded-xl outline-none focus:ring-2 ring-indigo-200">
-            <textarea id="road" placeholder="মহল্লা/গ্রাম/রাস্তা" class="md:col-span-2 p-3 border rounded-xl h-16 outline-none focus:ring-2 ring-indigo-200"></textarea>
+            <input type="text" id="owner" placeholder="মালিকের নাম" class="p-3 border rounded-xl outline-none">
+            <input type="text" id="parent" placeholder="পিতা/স্বামী" class="p-3 border rounded-xl outline-none">
+            <input type="text" id="hld" placeholder="হোল্ডিং নং" class="p-3 border rounded-xl outline-none">
+            <input type="text" id="ward" placeholder="ওয়ার্ড নং" class="p-3 border rounded-xl outline-none">
+            <textarea id="road" placeholder="মহল্লা/গ্রাম/রাস্তা" class="md:col-span-2 p-3 border rounded-xl h-16 outline-none"></textarea>
         </div>
         <button id="save-btn" onclick="saveData()" class="w-full mt-4 bg-indigo-600 text-white py-4 rounded-xl font-bold shadow-xl">তথ্য সেভ করুন</button>
     </div>
 
     <div id="admin-action-buttons" class="hidden grid grid-cols-2 gap-4 mb-10">
-        <button onclick="downloadBulkID()" class="bg-emerald-500 text-white py-3 rounded-xl font-bold text-sm shadow-lg">📂 ZIP ডাউনলোড</button>
-        <button onclick="window.print()" class="bg-blue-600 text-white py-3 rounded-xl font-bold text-sm shadow-lg">🖨️ প্লেইট প্রিন্ট</button>
+        <button onclick="downloadBulkID()" class="bg-emerald-500 text-white py-3 rounded-xl font-bold text-sm">📂 ZIP ডাউনলোড</button>
+        <button onclick="window.print()" class="bg-blue-600 text-white py-3 rounded-xl font-bold text-sm">🖨️ প্রিন্ট আউট</button>
     </div>
 
     <div id="data-list-container" class="space-y-3"></div>
@@ -92,13 +97,9 @@
 
     function checkAccess() {
         if (currentUser && users[currentUser]) {
-            if (users[currentUser].status === 'blocked') { 
-                alert("আপনার আইডি ব্লক করা হয়েছে! অ্যাডমিনের সাথে যোগাযোগ করুন।"); 
-                logout(); 
-                return; 
-            }
+            if (users[currentUser].status === 'blocked') { alert("আইডি ব্লকড!"); logout(); return; }
             document.getElementById('main-content').classList.remove('hidden');
-            document.getElementById('user-display').innerText = `লগইন: ${currentUser}`;
+            document.getElementById('user-display').innerText = `ইউজার: ${currentUser}`;
             if(currentUser === 'admin') {
                 document.getElementById('super-admin-panel').classList.remove('hidden');
                 document.getElementById('admin-action-buttons').classList.remove('hidden');
@@ -112,10 +113,23 @@
         }
     }
 
-    // ইউজার ব্লক ও আনব্লক ফাংশন
+    function handlePlateUpload() {
+        const file = document.getElementById('plate-file-input').files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            localStorage.setItem('2b_plate_v3', reader.result);
+            plateTemplate = reader.result;
+            alert("টেম্পলেট আপলোড সফল হয়েছে!");
+            location.reload();
+        };
+        reader.readAsDataURL(file);
+    }
+
     function toggleBlock(u) {
         users[u].status = (users[u].status === 'active' ? 'blocked' : 'active');
-        saveUsers();
+        localStorage.setItem('2b_users_db', JSON.stringify(users));
+        location.reload();
     }
 
     function renderUserManagement() {
@@ -124,21 +138,12 @@
             if(u === 'admin') return;
             const b = users[u].status === 'blocked';
             list.innerHTML += `<div class="bg-slate-800 p-3 rounded-xl flex justify-between items-center text-[11px] border border-slate-700">
-                <div>
-                    <p class="${b ? 'text-red-400' : 'text-indigo-300'} font-bold">${u} [${users[u].status}]</p>
-                    <p class="text-slate-400 text-[9px]">🔑 পাস: ${users[u].pass}</p>
-                </div>
+                <div><p class="text-indigo-300 font-bold">${u}</p><p class="text-slate-400 text-[9px]">পাস: ${users[u].pass}</p></div>
                 <div class="flex gap-2">
-                    <button onclick="toggleBlock('${u}')" class="px-3 py-1 rounded font-bold ${b ? 'bg-green-600 text-white' : 'bg-red-500/20 text-red-400 border border-red-500/50'}">${b ? 'আনব্লক' : 'ব্লক'}</button>
-                    <button onclick="deleteUser('${u}')" class="text-slate-500 hover:text-white">মুছুন</button>
+                    <button onclick="toggleBlock('${u}')" class="px-3 py-1 rounded font-bold ${b ? 'bg-green-600' : 'bg-red-500'}">${b ? 'আনব্লক' : 'ব্লক'}</button>
+                    <button onclick="deleteUser('${u}')" class="text-slate-500">মুছুন</button>
                 </div></div>`;
         });
-    }
-
-    function clearAllData() {
-        if (confirm("সব তথ্য মুছবেন?") && prompt("লিখুন: DELETE ALL") === "DELETE ALL") {
-            db = []; localStorage.setItem('2b_main_db_v12', JSON.stringify(db)); location.reload();
-        }
     }
 
     function renderStats() {
@@ -148,17 +153,9 @@
         const counts = {};
         db.forEach(d => counts[d.user] = (counts[d.user] || 0) + 1);
         Object.keys(users).forEach(u => {
-            statsGrid.innerHTML += `<div class="bg-slate-800 p-2 rounded-lg border border-slate-700"><p class="text-[10px] text-indigo-300 truncate font-bold">${u}</p><p class="text-lg font-black">${counts[u] || 0} টি</p></div>`;
+            statsGrid.innerHTML += `<div class="bg-slate-800 p-2 rounded-lg border border-slate-700"><p class="text-[10px] text-indigo-300 truncate">${u}</p><p class="text-lg font-bold">${counts[u] || 0}</p></div>`;
         });
     }
-
-    function addUser() {
-        const u = document.getElementById('new-username').value.trim();
-        const p = document.getElementById('new-password').value.trim();
-        if(u && p) { users[u] = { pass: p, status: "active" }; saveUsers(); }
-    }
-    function deleteUser(u) { if(confirm(`${u} কে মুছবেন?`)) { delete users[u]; saveUsers(); } }
-    function saveUsers() { localStorage.setItem('2b_users_db', JSON.stringify(users)); location.reload(); }
 
     function saveData() {
         const owner = document.getElementById('owner').value.trim();
@@ -176,8 +173,8 @@
         let list = (currentUser==='admin') ? db : db.filter(d => d.user === currentUser);
         list.slice().reverse().forEach(d => {
             const i = db.indexOf(d);
-            container.innerHTML += `<div class="bg-white p-4 rounded-xl border flex justify-between items-center shadow-sm hover:shadow-md transition-all">
-                <div><h4 class="font-bold text-slate-800">${d.owner} <span class="text-[10px] text-slate-400">#${d.hld}</span></h4><p class="text-[10px] text-slate-500 font-bold uppercase">${d.user} ● ${d.date}</p></div>
+            container.innerHTML += `<div class="bg-white p-4 rounded-xl border flex justify-between items-center shadow-sm">
+                <div><h4 class="font-bold">${d.owner} <span class="text-[10px] text-slate-400">#${d.hld}</span></h4><p class="text-[10px] text-slate-500 uppercase">${d.user} | ${d.date}</p></div>
                 <div class="flex gap-2">
                     <button onclick="editEntry(${i})" class="bg-amber-50 text-amber-600 px-3 py-1 rounded text-xs font-bold">এডিট</button>
                     ${currentUser==='admin' ? `<button onclick="deleteEntry(${i})" class="text-red-400 text-xs">মুছুন</button>` : ''}
@@ -211,6 +208,18 @@
         zip.generateAsync({type: "blob"}).then(c => { const a = document.createElement("a"); a.href = URL.createObjectURL(c); a.download = "IDs.zip"; a.click(); });
     }
 
+    function clearAllData() {
+        if (confirm("সব তথ্য মুছবেন?") && prompt("লিখুন: DELETE ALL") === "DELETE ALL") {
+            db = []; localStorage.setItem('2b_main_db_v12', JSON.stringify(db)); location.reload();
+        }
+    }
+
+    function addUser() {
+        const u = document.getElementById('new-username').value.trim();
+        const p = document.getElementById('new-password').value.trim();
+        if(u && p) { users[u] = { pass: p, status: "active" }; localStorage.setItem('2b_users_db', JSON.stringify(users)); location.reload(); }
+    }
+    function deleteUser(u) { if(confirm("ইউজার মুছবেন?")) { delete users[u]; localStorage.setItem('2b_users_db', JSON.stringify(users)); location.reload(); } }
     function deleteEntry(i) { if(confirm("মুছবেন?")) { db.splice(i, 1); localStorage.setItem('2b_main_db_v12', JSON.stringify(db)); location.reload(); } }
     function logout() { sessionStorage.removeItem('logged_2b_user'); location.reload(); }
 </script>
